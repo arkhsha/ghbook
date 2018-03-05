@@ -1,0 +1,42 @@
+https://compojoom.com/documentation/ccomment/ch03s02s12
+Mtree – com_mtree (Pro feature)
+Go to your Joomla backend -> components -> CComment -> settings -> new, from the component dropdown field select com_mtree and click next. Save your configuration.
+
+Now you need to make changes to your mtree template files:
+
+Create a new file compojoom.tpl.php and place it in components/com_mtree/templates/your_template . This file should have the following content:
+
+<?php
+/**
+ * @package - com_comment
+ * @author: DanielDimitrov - compojoom.com
+ * @date: 02.04.13
+ *
+ * @copyright  Copyright (C) 2008 - 2013 compojoom.com . All rights reserved.
+ * @license    GNU General Public License version 2 or later; see LICENSE
+ */
+
+defined('_JEXEC') or die('Restricted access');
+
+JLoader::discover('ccommentHelper', JPATH_ROOT . '/components/com_comment/helpers');
+echo ccommentHelperUtils::commentInit('com_mtree', $this->link, $this->mtconf);
+Now go to page_listing.tpl.php and comment out or delete this line:
+
+if ($this->mt_show_review) include $this->loadTemplate( 'sub_reviews.tpl.php' ); 
+after that add this line:
+
+include $this->loadTemplate('compojoom.tpl.php');
+Now go to sub_listingSummary.tpl.php and find the following code:
+
+if( $this->config->get('show_review') )
+{
+	echo '<span class="reviews">';
+	echo '<a href="' . JRoute::_( 'index.php?option=com_mtree&task=viewlink&link_id=' . $link->link_id . '&Itemid='  . $this->Itemid ) . '">' . $this->reviews[$link->link_id]->total . ' ' . strtolower(JText::_( 'Reviews' )) . '</a>';
+	echo '</span>';
+}
+echo '</div>';
+Comment it out or delete and add the following lines:
+
+$this->link = $link;
+include $this->loadTemplate( 'compojoom.tpl.php' );
+Now you should see CComment in Mtree.
